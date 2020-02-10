@@ -1,0 +1,26 @@
+{
+  "name": "igme430-project1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"tests complete\"",
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nxg9997/IGME430-Project1.git"
+  },
+  "author": "Nathan Glick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nxg9997/IGME430-Project1/issues"
+  },
+  "homepage": "https://github.com/nxg9997/IGME430-Project1",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0"
+  }
+}
