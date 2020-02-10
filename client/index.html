@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bf</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="/style">
+</head>
+<body>
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id="app">
+        <header class="mdl-layout__header">
+          <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Title</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+              <a class="mdl-navigation__link" href="">Link</a>
+              <a class="mdl-navigation__link" href="">Link</a>
+              <a class="mdl-navigation__link" href="">Link</a>
+              <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
+          </div>
+        </header>
+        <div class="mdl-layout__drawer">
+          <span class="mdl-layout-title">Title</span>
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="">Link</a>
+            <a class="mdl-navigation__link" href="">Link</a>
+            <a class="mdl-navigation__link" href="">Link</a>
+            <a class="mdl-navigation__link" href="">Link</a>
+          </nav>
+        </div>
+        <main class="mdl-layout__content">
+          <div class="page-content mdl-grid">
+              <div class="mdl-cell mdl-cell--4-col">
+                <p>{{test}}</p>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col">
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield nate-max-width">
+                      <textarea class="mdl-textfield__input nate-max-width code-area" type="text" rows= "3" id="sample5" v-model="bfCode"></textarea>
+                      <label class="mdl-textfield__label" for="sample5">Text lines...</label>
+                    </div>
+                  </form>
+              </div>
+              <div class="mdl-cell mdl-cell--4-col">
+                <button v-on:click="compile">Compile!</button>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col">
+                <p>{{result}}</p>
+              </div>
+            
+          </div>
+        </main>
+      </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            test: 'hi from vue :) x2',
+            bfCode: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
+            result: 'Result:\n'
+        },
+        methods: {
+            compile: () => {
+                //someText = someText.replace(/(\r\n|\n|\r)/gm,"");
+                fetch('/compile',{method:'post',headers:{'Content-Type':'application/json'},body:`{"code":"${app.bfCode.replace(/(\r\n|\n|\r)/gm,"")}"}`}).then(res=>{
+                    res.json().then(data=>{
+                        console.log(data);
+                        app.result = 'Result:\n' + data.result;
+                    });
+                });
+            }
+        }
+    });
+
+    function hw(){
+        fetch('/helloworld',{method:'get'}).then(res=>{
+            res.json().then(data=>{
+                console.log(data);
+            });
+        });
+    }
+</script>
+</html>
