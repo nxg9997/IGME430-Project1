@@ -30,3 +30,4 @@ const getCompile = (req, res) => {
 
 module.exports.helloworld = helloworld;
 module.exports.getCompile = getCompile;
+module.exports.sendResponse = sendResponse;

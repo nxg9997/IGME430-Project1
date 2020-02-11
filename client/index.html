@@ -17,7 +17,7 @@
         <header class="mdl-layout__header">
           <div class="mdl-layout__header-row">
             <!-- Title -->
-            <span class="mdl-layout-title">Title</span>
+            <span class="mdl-layout-title">{{title}}</span>
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
             <!-- Navigation. We hide it in small screens. -->
@@ -30,7 +30,7 @@
           </div>
         </header>
         <div class="mdl-layout__drawer">
-          <span class="mdl-layout-title">Title</span>
+          <span class="mdl-layout-title">{{title}}</span>
           <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="">Link</a>
             <a class="mdl-navigation__link" href="">Link</a>
@@ -46,13 +46,13 @@
               <div class="mdl-cell mdl-cell--12-col">
                 <form action="#">
                     <div class="mdl-textfield mdl-js-textfield nate-max-width">
-                      <textarea class="mdl-textfield__input nate-max-width code-area" type="text" rows= "3" id="sample5" v-model="bfCode"></textarea>
+                      <textarea class="mdl-textfield__input nate-max-width code-area" type="text" rows= "3" id="sample5" v-model="bfCode" wrap="off"></textarea>
                       <label class="mdl-textfield__label" for="sample5">Text lines...</label>
                     </div>
                   </form>
               </div>
               <div class="mdl-cell mdl-cell--4-col">
-                <button v-on:click="compile">Compile!</button>
+                <button v-on:click="compile" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Compile!</button>
               </div>
               <div class="mdl-cell mdl-cell--12-col">
                 <p>{{result}}</p>
@@ -67,6 +67,7 @@
         el: '#app',
         data: {
             test: 'hi from vue :) x2',
+            title: 'BF Compiler',
             bfCode: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
             result: 'Result:\n'
         },
@@ -84,11 +85,27 @@
     });
 
     function hw(){
-        fetch('/helloworld',{method:'get'}).then(res=>{
-            res.json().then(data=>{
-                console.log(data);
-            });
-        });
+      fetch('/helloworld',{method:'get'}).then(res=>{
+          res.json().then(data=>{
+              console.log(data);
+          });
+      });
+    }
+
+    function addUser(user,pass){
+      fetch('/addUser',{method:'post',body:`{"user":"${user}","password":"${pass}"}`}).then(res=>{
+          res.json().then(data=>{
+              console.log(data);
+          });
+      });
+    }
+
+    function getScripts(user,pass){
+      fetch('/getScripts',{method:'post',body:`{"user":"${user}","password":"${pass}"}`}).then(res=>{
+          res.json().then(data=>{
+              console.log(data);
+          });
+      });
     }
 </script>
 </html>

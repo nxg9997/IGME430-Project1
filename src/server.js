@@ -4,6 +4,7 @@ const jsonHandler = require('./jsonResponses.js');
 const jsHandler = require('./jsResponses.js');
 const cssHandler = require('./cssResponses.js');
 const genericHandler = require('./genericResponses.js');
+const dbHandler = require('./dbHandler.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -38,6 +39,12 @@ const onRequest = (req, res) => {
     switch (rawUrl) {
       case '/compile':
         jsonHandler.getCompile(req, res);
+        break;
+      case '/addUser':
+        dbHandler.addUser(req, res);
+        break;
+      case '/getScripts':
+        dbHandler.getScripts(req, res);
         break;
       default:
         // genericHandler.sendResponse(req, res, 403);
