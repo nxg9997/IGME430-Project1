@@ -40,8 +40,28 @@
         </div>
         <main class="mdl-layout__content">
           <div class="page-content mdl-grid">
-              <div class="mdl-cell mdl-cell--4-col">
-                <p>{{test}}</p>
+              <div class="mdl-cell mdl-cell--12-col mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                <div class="mdl-tabs__tab-bar">
+                    <a v-for="s in scripts" :href="'#' + s.name + '-panel'" class="mdl-tabs__tab" :class="checkScript(s.name)" v-on:click="setCurrent(s.name)">{{s.name}}</a>
+                    <a href="#add-script-panel" class="mdl-tabs__tab" v-on:click="addScriptLocal"><i class="material-icons">add</i></a>
+                </div>
+                <div v-for="s in scripts" class="mdl-tabs__panel" :id="s.name + '-panel'" style="display: none;"></div>
+                <div class="mdl-tabs__panel" id="add-script-panel" style="display: none;"></div>
+              </div>
+              <div class="mdl-cell mdl-cell--12-col mdl-grid nate-remove-spacing">
+                <div class="mdl-layout-spacer nate-remove-spacing"></div>
+
+                  <div class="mdl-cell nate-remove-spacing nate-set-flex">
+                    <form action="#">
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="sample1" v-model="rename" v-on:change="setName">
+                            <label class="mdl-textfield__label" for="sample1">Name...</label>
+                        </div>
+                    </form>
+                    <!--button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Rename</button-->
+                  </div>
+                  <div class="mdl-layout-spacer nate-remove-spacing"></div>
+
               </div>
               <div class="mdl-cell mdl-cell--12-col">
                 <form action="#">
@@ -70,7 +90,13 @@
             title: 'BF Compiler',
             bfCode: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
             result: 'Result:\n',
-            scripts: []
+            scripts: [{
+                code: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
+                name: 'HelloWorld'
+            }],
+            currScript: 'HelloWorld',
+            newCount: 0,
+            rename: ''
         },
         methods: {
             compile: () => {
@@ -81,7 +107,57 @@
                         app.result = 'Result:\n' + data.result;
                     });
                 });
+            },
+            setCurrent: (name) => {
+               // app.currScript = name;
+               if(app !== undefined){
+                
+                    for(let s of app.scripts){
+                       if(s.name === app.currScript){
+                           s.code = app.bfCode;
+                           break;
+                       }
+                    }
+
+                   app.currScript = name;
+                   for(let s of app.scripts){
+                       if(s.name === name){
+                           app.bfCode = s.code;
+                           break;
+                       }
+                   }
+               }
+               //console.log(name);
+            },
+            checkScript: (name) => {
+                
+                return {
+                    'is-active': app !== undefined?(name === app.currScript):false
+                };
+                //return {'is-active': true};
+                
+            },
+            addScriptLocal: () => {
+                app.scripts.push({
+                    code: '',
+                    name: 'new-script' + app.newCount
+                });
+                app.setCurrent('new-script' +app.newCount);
+                app.newCount++;
+            },
+            setName: () => {
+                for(let s of app.scripts){
+                    if(s.name === app.currScript){
+                        s.name = app.rename;
+                        app.currScript = s.name;
+                        break;
+                    }
+                }
+                app.rename = ''
             }
+        },
+        computed: {
+            
         }
     });
 
@@ -106,6 +182,7 @@
           res.json().then(data=>{
               console.log(data);
               app.scripts = data.scripts;
+              app.$forceUpdate();
           });
       });
     }

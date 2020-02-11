@@ -26,7 +26,7 @@ const onRequest = (req, res) => {
         cssHandler.getClientCss(req, res);
         break;
       default:
-        // jsonHandler.getNotFound(req, res);
+        jsonHandler.getNotFound(req, res);
         break;
     }
   } else if (req.method === 'HEAD') {

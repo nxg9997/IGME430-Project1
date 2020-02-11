@@ -8,3 +8,13 @@
     border-radius: 5px;
     resize: none;
 }
+
+.nate-remove-spacing {
+    margin: 0;
+    padding: 0;
+}
+
+.nate-set-flex {
+    display: flex;
+    flex-direction: row;
+}
