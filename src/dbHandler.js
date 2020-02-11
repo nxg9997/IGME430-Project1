@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const dbData = require('./config.js');
 const genericHandler = require('./genericResponses.js');
 const jsonHandler = require('./jsonResponses.js');
+const dataHandler = require('./dataHandler.js');
 
 const addUser = (req, res) => {
     let conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
@@ -110,5 +111,32 @@ const getScripts = (req,res) => {
     }
 };
 
+const addScript = (req, res) => {
+    dataHandler.getChunks(req,res,(data)=>{
+        authenticate(req,res,data,(result)=>{
+            if(result.auth === 'false'){
+                genericHandler.sendResponse(req,res,401);
+                return;
+            }
+            else{
+                const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
+                console.log(result);
+                conn.query(`update data set scripts='{"scripts":${JSON.stringify(result.scripts)}}' where user='${result.user}' and password='${result.password}'`,[],(err,res2,fields)=>{
+                    if(err){
+                        genericHandler.sendResponse(req,res,500);
+                        console.log(err);
+                        return;
+                    }
+                    else{
+                        jsonHandler.sendResponse(req,res,204,{'Content-Type':'application/json'},{'message':'updated scripts'});
+                        return;
+                    }
+                })
+            }
+        })
+    });
+};
+
 module.exports.addUser = addUser;
 module.exports.getScripts = getScripts;
+module.exports.addScript = addScript;

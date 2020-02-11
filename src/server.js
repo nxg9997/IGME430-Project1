@@ -46,6 +46,9 @@ const onRequest = (req, res) => {
       case '/getScripts':
         dbHandler.getScripts(req, res);
         break;
+      case '/addScript':
+        dbHandler.addScript(req, res);
+        break;
       default:
         // genericHandler.sendResponse(req, res, 403);
         break;

@@ -69,7 +69,8 @@
             test: 'hi from vue :) x2',
             title: 'BF Compiler',
             bfCode: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
-            result: 'Result:\n'
+            result: 'Result:\n',
+            scripts: []
         },
         methods: {
             compile: () => {
@@ -102,6 +103,17 @@
 
     function getScripts(user,pass){
       fetch('/getScripts',{method:'post',body:`{"user":"${user}","password":"${pass}"}`}).then(res=>{
+          res.json().then(data=>{
+              console.log(data);
+              app.scripts = data.scripts;
+          });
+      });
+    }
+
+    function addScriptTest(user,pass,script){
+      app.scripts.push({'code': script, 'name': 'Test'});
+      console.log(app.scripts);
+      fetch('/addScript',{method:'post',body:`{"user":"${user}","password":"${pass}","scripts":${JSON.stringify(app.scripts)}}`}).then(res=>{
           res.json().then(data=>{
               console.log(data);
           });
