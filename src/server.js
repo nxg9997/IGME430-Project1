@@ -31,8 +31,20 @@ const onRequest = (req, res) => {
     }
   } else if (req.method === 'HEAD') {
     switch (rawUrl) {
+      case '/':
+      case '/bf':
+      case '/helloworld':
+      case '/style':
+      case '/compile':
+      case '/addUser':
+      case '/getScripts':
+      case '/addScript':
+      case '/saveScripts':
+      case 'logIn':
+        genericHandler.sendResponse(req, res, 200);
+        break;
       default:
-        // genericHandler.sendResponse(req, res, 404);
+        genericHandler.sendResponse(req, res, 404);
         break;
     }
   } else if (req.method === 'POST') {
@@ -49,8 +61,14 @@ const onRequest = (req, res) => {
       case '/addScript':
         dbHandler.addScript(req, res);
         break;
+      case '/saveScripts':
+        dbHandler.addScript(req, res);
+        break;
+      case '/logIn':
+        dbHandler.getAuth(req, res);
+        break;
       default:
-        // genericHandler.sendResponse(req, res, 403);
+        jsonHandler.getNotFound(req, res);
         break;
     }
   }

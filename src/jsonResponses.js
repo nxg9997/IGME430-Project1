@@ -1,5 +1,5 @@
 // const serverData = require('./data.js');
-const genericHandler = require('./genericResponses.js');
+// const genericHandler = require('./genericResponses.js');
 const bf = require('./bf-node.js');
 
 const sendResponse = (req, res, code, headers, msg) => {
@@ -9,8 +9,8 @@ const sendResponse = (req, res, code, headers, msg) => {
 };
 
 const getNotFound = (req, res) => {
-  sendResponse(req,res,404,{'Content-Type':'application/json'},{'message':'content not found','id':'Error Not Found'});
-}
+  sendResponse(req, res, 404, { 'Content-Type': 'application/json' }, { message: 'content not found', id: 'Error Not Found' });
+};
 
 const helloworld = (req, res) => {
   const result = bf.bf('++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.');

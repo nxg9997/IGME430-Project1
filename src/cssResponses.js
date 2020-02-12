@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const clientCss = fs.readFileSync(`${__dirname}/../client/style.css`);
+// const clientCss = fs.readFileSync(`${__dirname}/../client/style.css`);
 
 
 const getClientCss = (req, res) => {

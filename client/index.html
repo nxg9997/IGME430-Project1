@@ -21,7 +21,7 @@
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
             <!-- Navigation. We hide it in small screens. -->
-            <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <nav class="mdl-navigation mdl-layout--large-screen-only" style="display: none;">
               <a class="mdl-navigation__link" href="">Link</a>
               <a class="mdl-navigation__link" href="">Link</a>
               <a class="mdl-navigation__link" href="">Link</a>
@@ -31,7 +31,27 @@
         </header>
         <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">{{title}}</span>
-          <nav class="mdl-navigation">
+          <div :class="{ 'nate-hidden': loggedIn}">
+            <form action="#" class="nate-add-margin">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" id="username" v-model="user.username">
+                  <label class="mdl-textfield__label" for="username">Username</label>
+                </div>
+              </form>
+              <form action="#" class="nate-add-margin">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="password" id="password" v-model="user.password">
+                  <label class="mdl-textfield__label" for="password">Password</label>
+                </div>
+            </form>
+            <button v-on:click="logIn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect nate-add-margin">Log In</button>
+          </div>
+
+          <div :class="{ 'nate-hidden': !loggedIn }">
+            <button v-on:click="saveScripts" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect nate-add-margin">Save Scripts</button>
+          </div>
+          
+          <nav class="mdl-navigation" style="display: none;">
             <a class="mdl-navigation__link" href="">Link</a>
             <a class="mdl-navigation__link" href="">Link</a>
             <a class="mdl-navigation__link" href="">Link</a>
@@ -49,19 +69,16 @@
                 <div class="mdl-tabs__panel" id="add-script-panel" style="display: none;"></div>
               </div>
               <div class="mdl-cell mdl-cell--12-col mdl-grid nate-remove-spacing">
-                <div class="mdl-layout-spacer nate-remove-spacing"></div>
 
-                  <div class="mdl-cell nate-remove-spacing nate-set-flex">
-                    <form action="#">
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" id="sample1" v-model="rename" v-on:change="setName">
-                            <label class="mdl-textfield__label" for="sample1">Name...</label>
-                        </div>
-                    </form>
-                    <!--button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Rename</button-->
-                  </div>
-                  <div class="mdl-layout-spacer nate-remove-spacing"></div>
-
+                <div class="mdl-cell mdl-cell--4-col nate-set-flex">
+                  <form action="#">
+                      <div class="mdl-textfield mdl-js-textfield">
+                          <input class="mdl-textfield__input" type="text" id="sample1" v-model="rename" v-on:change="setName">
+                          <label class="mdl-textfield__label" for="sample1">Name...</label>
+                      </div>
+                  </form>
+                  <!--button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Rename</button-->
+                </div>
               </div>
               <div class="mdl-cell mdl-cell--12-col">
                 <form action="#">
@@ -96,12 +113,17 @@
             }],
             currScript: 'HelloWorld',
             newCount: 0,
-            rename: ''
+            rename: '',
+            user: {
+              username: '',
+              password: ''
+            },
+            loggedIn: false
         },
         methods: {
             compile: () => {
                 //someText = someText.replace(/(\r\n|\n|\r)/gm,"");
-                fetch('/compile',{method:'post',headers:{'Content-Type':'application/json'},body:`{"code":"${app.bfCode.replace(/(\r\n|\n|\r)/gm,"")}"}`}).then(res=>{
+                fetch('/compile',{method:'post',headers:{'Content-Type':'application/json','accept':'application/json'},body:`{"code":"${app.bfCode.replace(/(\r\n|\n|\r)/gm,"")}"}`}).then(res=>{
                     res.json().then(data=>{
                         console.log(data);
                         app.result = 'Result:\n' + data.result;
@@ -153,7 +175,21 @@
                         break;
                     }
                 }
-                app.rename = ''
+                app.rename = 'Name...'
+            },
+            logIn: () => {
+              fetch('/logIn',{method:'post',body:`{"user":"${app.user.username}","password":"${app.user.password}"}`}).then(res=>{
+                  res.json().then(data=>{
+                      console.log(data);
+                      if(data.auth){
+                        app.loggedIn = true;
+                        getScripts(app.user.username,app.user.password);
+                      }
+                  });
+              });
+            },
+            saveScripts: () => {
+              fetch('/saveScripts',{method:'post',body:`{"user":"${app.user.username}","password":"${app.user.password}","scripts":${JSON.stringify(app.scripts)}}`});
             }
         },
         computed: {
