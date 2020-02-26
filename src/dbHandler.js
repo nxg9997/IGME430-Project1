@@ -16,7 +16,7 @@ const addUser = (req, res) => {
       if (err2) {
         // console.log(err2);
         // genericHandler.sendResponse(req,res,500);
-        jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { 'message': 'Server Error', 'id': 'Internal Server Error' });
+        jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { message: 'Server Error', id: 'Internal Server Error' });
         return;
       }
       if (res3.length === 0) {
@@ -28,7 +28,7 @@ const addUser = (req, res) => {
               // logger.error(err);
               // res.send({result:"fail"});
               // genericHandler.sendResponse(req,res,500);
-              jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { 'message': 'Server Error', 'id': 'Internal Server Error' });
+              jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { message: 'Server Error', id: 'Internal Server Error' });
               return;
             }
 
@@ -36,13 +36,13 @@ const addUser = (req, res) => {
             /* result = res2;
                             res.send(result); */
             // genericHandler.sendResponse(req,res,201);
-            jsonHandler.sendResponse(req, res, 201, { 'Content-Type': 'application/json' }, { 'message': 'Created New User' });
+            jsonHandler.sendResponse(req, res, 201, { 'Content-Type': 'application/json' }, { message: 'Created New User' });
           });
 
         conn.end();
       } else {
         // genericHandler.sendResponse(req,res,401);
-        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { 'message': 'Unauthorized', 'id': 'Unauthorized' });
+        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { message: 'Unauthorized', id: 'Unauthorized' });
       }
     });
   }
@@ -85,7 +85,7 @@ const getScripts = (req, res) => {
     authenticate(req, res, data, (result) => {
       if (result === 'false') {
         // genericHandler.sendResponse(req,res,401);
-        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { 'message': 'Unauthorized', 'id': 'Unauthorized' });
+        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { message: 'Unauthorized', id: 'Unauthorized' });
         return;
       }
       const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
@@ -93,7 +93,7 @@ const getScripts = (req, res) => {
       conn.query(`select scripts from data where user='${data.user}' and password='${data.password}'`, [], (err, res2) => {
         if (err) {
           // genericHandler.sendResponse(req,res,500);
-          jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { 'message': 'Server Error', 'id': 'Internal Server Error' });
+          jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { message: 'Server Error', id: 'Internal Server Error' });
         } else {
           jsonHandler.sendResponse(req, res, 200, { 'Content-Type': 'application/json' }, JSON.parse(res2[0].scripts));
         }
@@ -115,7 +115,7 @@ const addScript = (req, res) => {
     authenticate(req, res, data, (result) => {
       if (result === 'false') {
         // genericHandler.sendResponse(req,res,401);
-        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { 'message': 'Unauthorized', 'id': 'Unauthorized' });
+        jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { message: 'Unauthorized', id: 'Unauthorized' });
         return;
       }
 
@@ -124,7 +124,7 @@ const addScript = (req, res) => {
       conn.query(`update data set scripts='{"scripts":${JSON.stringify(data.scripts)}}' where user='${data.user}' and password='${data.password}'`, [], (err) => {
         if (err) {
           // genericHandler.sendResponse(req,res,500);
-          jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { 'message': 'Server Error', 'id': 'Internal Server Error' });
+          jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { message: 'Server Error', id: 'Internal Server Error' });
           // console.log(err);
         } else {
           genericHandler.sendResponse(req, res, 204);
@@ -139,16 +139,46 @@ const getAuth = (req, res) => {
     authenticate(req, res, data, (result) => {
       // console.log(result);
       if (result === 'true') {
-        jsonHandler.sendResponse(req, res, 200, { 'Content-Type': 'application/json' }, { 'message': 'Logged In', 'auth': true });
+        jsonHandler.sendResponse(req, res, 200, { 'Content-Type': 'application/json' }, { message: 'Logged In', auth: true });
         return;
       }
 
-      jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { 'message': 'Bad Login', 'auth': false, 'id': 'Unauthorized' });
+      jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { message: 'Bad Login', auth: false, id: 'Unauthorized' });
     });
   });
+};
+
+const getUserExists = (req, res, user) => {
+  console.log(user);
+  const usrSplit = user.split('=');
+  console.log(usrSplit[1]);
+
+  const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
+
+  conn.query(`select scripts from data where user='${usrSplit[1]}'`, [], (err2, res3) => {
+    // console.log(res3);
+    if (err2) {
+      // console.log(err2);
+      // genericHandler.sendResponse(req,res,500);
+      jsonHandler.sendResponse(req, res, 500, { 'Content-Type': 'application/json' }, { message: 'Server Error', id: 'Internal Server Error' });
+      return;
+    }
+    if (res3.length === 0) {
+      jsonHandler.sendResponse(req, res, 200, { 'Content-Type': 'application/json' }, { message: 'User Not Found' });
+      conn.end();
+    } else {
+      // genericHandler.sendResponse(req,res,401);
+      jsonHandler.sendResponse(req, res, 401, { 'Content-Type': 'application/json' }, { message: 'User Found', id: 'Unauthorized' });
+      conn.end();
+    }
+  });
+
+
+  genericHandler.sendResponse(req, res, 200);
 };
 
 module.exports.addUser = addUser;
 module.exports.getScripts = getScripts;
 module.exports.addScript = addScript;
 module.exports.getAuth = getAuth;
+module.exports.getUserExists = getUserExists;

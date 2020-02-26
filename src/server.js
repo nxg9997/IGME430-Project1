@@ -25,6 +25,9 @@ const onRequest = (req, res) => {
       case '/style':
         cssHandler.getClientCss(req, res);
         break;
+      case '/username':
+        dbHandler.getUserExists(req, res, req.url.split('?')[1]);
+        break;
       default:
         jsonHandler.getNotFound(req, res);
         break;
