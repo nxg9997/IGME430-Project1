@@ -174,7 +174,7 @@ const getUserExists = (req, res, user) => {
   });
 
 
-  genericHandler.sendResponse(req, res, 200);
+  //genericHandler.sendResponse(req, res, 200);
 };
 
 module.exports.addUser = addUser;

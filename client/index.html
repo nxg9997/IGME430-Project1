@@ -29,6 +29,10 @@
             </nav>
           </div>
         </header>
+        <div id="toastbar" class="mdl-js-snackbar mdl-snackbar">
+          <div class="mdl-snackbar__text"></div>
+          <button class="mdl-snackbar__action" type="button"></button>
+        </div>
         <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">{{title}}</span>
           <div :class="{ 'nate-hidden': loggedIn}">
@@ -45,6 +49,7 @@
                 </div>
             </form>
             <button v-on:click="logIn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect nate-add-margin">Log In</button>
+            <button v-on:click="createUser" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect nate-add-margin">Create User</button>
           </div>
 
           <div :class="{ 'nate-hidden': !loggedIn }">
@@ -186,10 +191,20 @@
                         getScripts(app.user.username,app.user.password);
                       }
                   });
-              });
+                }
+              );
+
+              
+            
             },
             saveScripts: () => {
               fetch('/saveScripts',{method:'post',body:`{"user":"${app.user.username}","password":"${app.user.password}","scripts":${JSON.stringify(app.scripts)}}`});
+            },
+            createUser: () => {
+              checkUserExists(app.user.username,
+              () => {
+                addUser(app.user.username, app.user.password);
+              });
             }
         },
         computed: {
@@ -210,6 +225,9 @@
           res.json().then(data=>{
               console.log(data);
           });
+          if(res.status === 201){
+            toast("New User Created");
+          }
       });
     }
 
@@ -231,6 +249,27 @@
               console.log(data);
           });
       });
+    }
+
+    function checkUserExists(user, callback){
+      fetch('/username?username=' + user,{method:'GET'}).then(res=>{
+        res.json().then(data=>{
+          console.log(data);
+        });
+        if(res.status === 200){
+          callback();
+        }
+        else{
+          // user exists
+          toast("User already exists");
+        }
+      });
+    }
+
+    function toast(msg){
+      let snackbarContainer = document.querySelector('#toastbar');
+      let data = {message: msg};
+      snackbarContainer.MaterialSnackbar.showSnackbar(data);
     }
 </script>
 </html>
