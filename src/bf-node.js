@@ -1,3 +1,6 @@
+// / SOURCE - https://github.com/bbbsssss/brainfuck-js
+// / Code edited to abide by ESLint & to run as a NodeJS module
+
 
 const bf = (program, _input, _debug, _bits) => {
   // default parameter values

@@ -1,3 +1,5 @@
+
+// gets body from post request
 const getChunks = (req, res, callback) => {
   let data = [];
   req.on('data', (chunk) => {

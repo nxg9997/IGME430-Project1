@@ -2,7 +2,7 @@ const fs = require('fs');
 
 // const index = fs.readFileSync(`${__dirname}/../client/index.html`);
 
-
+// send the client html to the client
 const getIndex = (req, res) => {
   fs.readFile(`${__dirname}/../client/index.html`, (err, data) => {
     if (err) {

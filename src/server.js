@@ -8,9 +8,14 @@ const dbHandler = require('./dbHandler.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+// handle requests from the client
 const onRequest = (req, res) => {
   // console.log(req.method);
+
+  // parse query string if it exists
   const rawUrl = req.url.split('?')[0];
+
+  // request handling
   if (req.method === 'GET') {
     switch (rawUrl) {
       case '/':
@@ -18,6 +23,9 @@ const onRequest = (req, res) => {
         break;
       case '/bf':
         jsHandler.getBfInterpreter(req, res);
+        break;
+      case '/clientjs':
+        jsHandler.getClientJS(req, res);
         break;
       case '/helloworld':
         jsonHandler.helloworld(req, res);
@@ -43,6 +51,8 @@ const onRequest = (req, res) => {
       case '/getScripts':
       case '/addScript':
       case '/saveScripts':
+      case '/username':
+      case '/clientjs':
       case 'logIn':
         genericHandler.sendResponse(req, res, 200);
         break;

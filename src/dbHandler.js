@@ -4,6 +4,7 @@ const genericHandler = require('./genericResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 const dataHandler = require('./dataHandler.js');
 
+// adds a new user to the database
 const addUser = (req, res) => {
   const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
   let data = [];
@@ -56,6 +57,7 @@ const addUser = (req, res) => {
   });
 };
 
+// Authenticate a user based on user/password sent from client, if auth passes run callback function
 const authenticate = (req, res, data, callback = null) => {
   const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
 
@@ -78,6 +80,7 @@ const authenticate = (req, res, data, callback = null) => {
   conn.end();
 };
 
+// send user's scripts back to the client if auth passes
 const getScripts = (req, res) => {
   let data = [];
 
@@ -110,6 +113,7 @@ const getScripts = (req, res) => {
   });
 };
 
+// add a new script to the user if auth passes
 const addScript = (req, res) => {
   dataHandler.getChunks(req, res, (data) => {
     authenticate(req, res, data, (result) => {
@@ -134,6 +138,7 @@ const addScript = (req, res) => {
   });
 };
 
+// tells the client if auth passed (login)
 const getAuth = (req, res) => {
   dataHandler.getChunks(req, res, (data) => {
     authenticate(req, res, data, (result) => {
@@ -148,10 +153,15 @@ const getAuth = (req, res) => {
   });
 };
 
+// tells the client if a user already exists or not
 const getUserExists = (req, res, user) => {
-  console.log(user);
+  // console.log(user);
+  if (!user) {
+    jsonHandler.sendResponse(req, res, 400, { 'Content-Type': 'application/json' }, { message: 'Bad Request', id: 'Bad Request' });
+    return;
+  }
   const usrSplit = user.split('=');
-  console.log(usrSplit[1]);
+  // console.log(usrSplit[1]);
 
   const conn = mysql.createConnection(process.env.JAWSDB_URL || dbData.getData.mysql_str);
 
@@ -174,7 +184,7 @@ const getUserExists = (req, res, user) => {
   });
 
 
-  //genericHandler.sendResponse(req, res, 200);
+  // genericHandler.sendResponse(req, res, 200);
 };
 
 module.exports.addUser = addUser;
