@@ -97,8 +97,15 @@ var app = new Vue({
             });
         }
     },
-    computed: {
-        
+    watch: {
+        bfCode: () => {
+            for(let s of app.scripts){
+                if(s.name === app.currScript){
+                    s.code = app.bfCode;
+                    break;
+                }
+            }
+        }
     }
 });
 
